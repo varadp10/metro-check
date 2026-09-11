@@ -1,0 +1,41 @@
+# Secrets & Credentials (NEVER commit to GitHub)
+.env
+backend/.env
+*.env
+!*.env.example
+
+# Python cache & build
+__pycache__/
+*/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+
+# Local databases & runtime files
+*.db
+backend/compliance_local.db
+*.sqlite3
+
+# Uploaded test images (keep directory via .gitkeep)
+backend/uploaded_images/*
+!backend/uploaded_images/.gitkeep
+
+# Archives and binaries
+*.zip
+*.tar.gz
+*.rar
+
+# Generated PDFs
+backend/*.pdf
+*.pdf
+
+
+# IDE & OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

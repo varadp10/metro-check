@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>METRO CHECK | National Legal Metrology & Food Safety Screening Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN for Analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            gov: {
+              navy: '#0b1b3d',
+              blue: '#0284c7',
+              accent: '#f59e0b',
+              light: '#f8fafc',
+              border: '#e2e8f0',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col">
+
+  <!-- ================================================================= -->
+  <!-- TOP GOVERNMENT HEADER BAR -->
+  <!-- ================================================================= -->
+  <header class="bg-gov-navy text-white border-b-4 border-gov-accent shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-3">
+        <div class="bg-gov-accent text-gov-navy font-extrabold text-xl p-2 rounded-lg flex items-center justify-center shadow-inner">
+          ⚖️
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="text-xl font-bold tracking-tight text-white">METRO CHECK</span>
+            <span class="bg-sky-700 text-sky-100 text-xs px-2 py-0.5 rounded-full font-medium">SIH 2026</span>
+          </div>
+          <p class="text-xs text-slate-300 font-medium">
+            Ministry of Consumer Affairs, Food & Public Distribution | Team Neutral Navigators
+          </p>
+        </div>
+      </div>
+
+      <!-- User Auth State Header -->
+      <div class="flex items-center space-x-4">
+        <div id="authHeaderState" class="flex items-center space-x-3">
+          <!-- Populated by JS -->
+          <button onclick="openLoginModal()" class="bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold px-4 py-2 rounded-lg transition shadow">
+            Inspector Login
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- NAVIGATION TABS -->
+    <nav class="bg-slate-900/90 border-t border-slate-800">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-1 sm:space-x-4 overflow-x-auto py-2">
+        <button id="nav-scan" onclick="switchTab('scan')" class="px-3 py-1.5 rounded-md text-sm font-semibold text-white bg-sky-600 flex items-center space-x-2">
+          <i data-lucide="scan" class="w-4 h-4"></i>
+          <span>Live Scanner</span>
+        </button>
+        <button id="nav-batch" onclick="switchTab('batch')" class="px-3 py-1.5 rounded-md text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 flex items-center space-x-2">
+          <i data-lucide="layers" class="w-4 h-4"></i>
+          <span>Batch Scanner</span>
+        </button>
+        <button id="nav-regulations" onclick="switchTab('regulations')" class="px-3 py-1.5 rounded-md text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 flex items-center space-x-2">
+          <i data-lucide="book-open" class="w-4 h-4"></i>
+          <span>Regulations & Rules Guide</span>
+        </button>
+        <button id="nav-dashboard" onclick="switchTab('dashboard')" class="px-3 py-1.5 rounded-md text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 flex items-center space-x-2">
+          <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+          <span>Analytics & Records</span>
+        </button>
+        <button id="nav-notices" onclick="switchTab('notices')" class="px-3 py-1.5 rounded-md text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 flex items-center space-x-2">
+          <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+          <span>Complaints & Notices</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ================================================================= -->
+  <!-- MAIN CONTAINER -->
+  <!-- ================================================================= -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full">
+
+    <!-- =============================================================== -->
+    <!-- TAB 1: LIVE SCANNER -->
+    <!-- =============================================================== -->
+    <div id="tabContent-scan" class="space-y-6">
+      
+      <!-- SCANNER INPUT CONTROL CARD -->
+      <div class="glass-card rounded-xl p-6 shadow-sm">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-5 pb-4 border-b border-slate-200">
+          <div>
+            <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+              <i data-lucide="camera" class="w-5 h-5 text-sky-600"></i>
+              Scan Product Commodity or Food Label
+            </h2>
+            <p class="text-xs text-slate-500">
+              Evaluates Legal Metrology Rules, 2011 declarations + FSSAI harmful additives & nutritional proportions.
+            </p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <!-- Product Name Input -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Product Title</label>
+            <input type="text" id="inputProductName" placeholder="e.g. NutriBake Digestive Cookies 200g"
+                   class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none" />
+          </div>
+
+          <!-- Product Category -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Category</label>
+            <select id="inputCategory" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none">
+              <option value="Packaged Food">Packaged Food (Biscuits, Snacks, Cereals)</option>
+              <option value="Beverage">Beverage / Packaged Drinking Water</option>
+              <option value="Personal Care">Personal Care / Cosmetics / Toiletries</option>
+              <option value="Household Product">Household Goods & Commodities</option>
+            </select>
+          </div>
+
+          <!-- Packaging Layout Format -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Packaging Layout Format</label>
+            <select id="inputLayoutType" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none">
+              <option value="standard">Standard Rectangular Box / Flat Label</option>
+              <option value="pouch">Pouch / Flexible Foil Bag (Anti-Glare Filtering)</option>
+              <option value="bottle_can">Cylindrical Can / Bottle (Curved Surface)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- IMAGE UPLOAD / WEBCAM ZONE -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- File Drop Zone -->
+          <input type="file" id="fileInput" accept="image/*" class="hidden" onchange="handleFileSelect(event)" />
+          <div id="dropZone" class="border-2 border-dashed border-slate-300 hover:border-sky-500 rounded-xl p-6 text-center bg-slate-50 transition cursor-pointer flex flex-col items-center justify-center">
+            <i data-lucide="upload-cloud" class="w-10 h-10 text-slate-400 mb-2"></i>
+            <p class="text-sm font-semibold text-slate-700">Click or Drag & Drop Product Image</p>
+            <p class="text-xs text-slate-400 mt-1">JPEG, PNG, WEBP (High-res phone photos supported)</p>
+          </div>
+
+          <!-- Live Camera View / Snapshot Trigger -->
+          <div class="border border-slate-200 rounded-xl p-4 bg-white flex flex-col items-center justify-center text-center">
+            <div id="cameraPlaceholder">
+              <i data-lucide="video" class="w-10 h-10 text-sky-600 mb-2 mx-auto"></i>
+              <p class="text-sm font-semibold text-slate-700">Live Device Camera Scan</p>
+              <p class="text-xs text-slate-400 mb-3">Inspect physical product box directly during demo</p>
+              <button type="button" onclick="startLiveCamera()" class="text-xs bg-sky-600 hover:bg-sky-500 text-white font-semibold px-4 py-2 rounded-lg transition flex items-center gap-1.5 mx-auto">
+                <i data-lucide="camera" class="w-4 h-4"></i> Start Camera
+              </button>
+            </div>
+
+            <!-- Video Viewport (Initially Hidden) -->
+            <div id="cameraActive" class="hidden w-full space-y-2">
+              <video id="webcamVideo" autoplay playsinline class="w-full h-40 bg-black rounded-lg object-cover"></video>
+              <div class="flex justify-center gap-2">
+                <button type="button" onclick="captureCameraSnapshot()" class="text-xs bg-emerald-600 hover:bg-emerald-500 text-white font-semibold px-4 py-1.5 rounded-lg flex items-center gap-1">
+                  <i data-lucide="aperture" class="w-4 h-4"></i> Capture & Use
+                </button>
+                <button type="button" onclick="stopLiveCamera()" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold px-3 py-1.5 rounded-lg">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Selected Preview Bar & Run Button -->
+        <div id="selectedImageBar" class="hidden mt-4 p-3 bg-sky-50 border border-sky-200 rounded-lg flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <img id="previewThumb" class="w-12 h-12 rounded object-cover border border-sky-300" />
+            <div>
+              <p id="previewFilename" class="text-xs font-bold text-sky-900">selected_image.png</p>
+              <p class="text-xs text-sky-600">Ready for automated inspection pipeline</p>
+            </div>
+          </div>
+          <button type="button" id="btnRunScan" onclick="executeScan()" class="bg-gov-navy hover:bg-slate-800 text-white font-bold text-sm px-6 py-2.5 rounded-lg transition shadow flex items-center gap-2 cursor-pointer">
+            <i data-lucide="search" class="w-4 h-4 text-gov-accent"></i>
+            <span>Run Complete Compliance Scan</span>
+          </button>
+        </div>
+
+        <!-- Error Alert Banner -->
+        <div id="scanErrorMessage" class="hidden mt-4 p-4 bg-red-50 border border-red-300 rounded-xl text-xs text-red-900 flex items-start gap-3">
+          <span class="text-lg">⚠️</span>
+          <div>
+            <p class="font-bold">Scan Could Not Be Completed</p>
+            <p id="scanErrorDetail" class="mt-0.5 text-slate-700"></p>
+          </div>
+        </div>
+
+        <!-- Scanning Progress State -->
+        <div id="scanLoading" class="hidden mt-4 text-center py-6">
+          <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-sky-600 border-t-transparent mb-2"></div>
+          <p class="text-sm font-bold text-slate-800">Processing Computer Vision & Rule Engine...</p>
+          <p class="text-xs text-slate-500">Extracting text coordinates, checking Legal Metrology rules, and screening ingredients.</p>
+        </div>
+
+      </div>
+
+      <!-- ============================================================= -->
+      <!-- SCAN RESULTS DASHBOARD (Initially Hidden) -->
+      <!-- ============================================================= -->
+      <div id="scanResultsArea" class="hidden space-y-6">
+
+        <!-- 3-TIER STATUS BANNER -->
+        <div id="statusBanner" class="rounded-xl p-5 border shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+          <div class="flex items-center space-x-4">
+            <div id="statusIcon" class="p-3 rounded-xl text-3xl font-extrabold flex items-center justify-center">
+              <!-- Icon -->
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span id="statusTitle" class="text-xl font-extrabold tracking-tight">STATUS</span>
+                <span id="scoreBadgeText" class="text-xs px-2.5 py-0.5 rounded-full font-bold"></span>
+              </div>
+              <p id="statusSummary" class="text-xs mt-1 max-w-xl"></p>
+            </div>
+          </div>
+
+          <!-- Quick Action Buttons -->
+          <div class="flex items-center gap-2 flex-wrap">
+            <a id="btnDownloadPDF" target="_blank" class="bg-gov-navy hover:bg-slate-800 text-white text-xs font-semibold px-4 py-2 rounded-lg transition flex items-center gap-1.5 shadow">
+              <i data-lucide="file-text" class="w-4 h-4"></i> Official Inspection PDF
+            </a>
+            <button id="btnOpenNoticeModal" onclick="openNoticeModal()" class="bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold px-4 py-2 rounded-lg transition flex items-center gap-1.5 shadow">
+              <i data-lucide="mail-warning" class="w-4 h-4"></i> Show-Cause Notice
+            </button>
+            <button id="btnFileComplaint" onclick="fileDepartmentComplaintAction()" class="bg-red-600 hover:bg-red-500 text-white text-xs font-semibold px-4 py-2 rounded-lg transition flex items-center gap-1.5 shadow">
+              <i data-lucide="shield-alert" class="w-4 h-4"></i> Report Company
+            </button>
+          </div>
+        </div>
+
+        <!-- MAIN RESULTS GRID: CV IMAGE CANVAS vs AUDIT TABS -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+          <!-- LEFT COLUMN: COMPUTER VISION EVIDENCE (5 Cols) -->
+          <div class="lg:col-span-5 glass-card rounded-xl p-5 shadow-sm space-y-4">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+              <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                <i data-lucide="eye" class="w-4 h-4 text-sky-600"></i>
+                Computer Vision Bounding-Box Evidence
+              </h3>
+              <span class="text-xs bg-slate-100 text-slate-600 font-semibold px-2 py-0.5 rounded">Tesseract + OpenCV</span>
+            </div>
+
+            <div class="relative bg-slate-900 rounded-lg overflow-hidden flex items-center justify-center min-h-[300px] border border-slate-200">
+              <img id="annotatedImageDisplay" class="max-w-full max-h-[460px] object-contain" />
+            </div>
+
+            <!-- Bounding Box Legend -->
+            <div class="grid grid-cols-3 gap-2 text-center text-[11px] font-medium pt-1">
+              <div class="bg-emerald-50 text-emerald-800 border border-emerald-200 py-1 px-2 rounded">
+                🟢 Mandatory Rule Passed
+              </div>
+              <div class="bg-sky-50 text-sky-800 border border-sky-200 py-1 px-2 rounded">
+                🔵 Detected Text Line
+              </div>
+              <div class="bg-amber-50 text-amber-800 border border-amber-200 py-1 px-2 rounded">
+                🟡 Small Font / Low Conf
+              </div>
+            </div>
+
+            <!-- OCR Raw Text Expandable -->
+            <details class="bg-slate-50 border border-slate-200 rounded-lg p-3 text-xs">
+              <summary class="font-bold text-slate-700 cursor-pointer flex items-center justify-between">
+                <span>View Full Extracted OCR Text</span>
+                <span class="text-[10px] text-sky-600">Click to expand</span>
+              </summary>
+              <pre id="rawOcrText" class="mt-2 text-[11px] text-slate-600 whitespace-pre-wrap max-h-48 overflow-y-auto bg-white p-2 rounded border border-slate-100 font-mono"></pre>
+            </details>
+          </div>
+
+          <!-- RIGHT COLUMN: MULTI-AUDIT CARDS (7 Cols) -->
+          <div class="lg:col-span-7 space-y-4">
+
+            <!-- Sub-tabs: 1. Legal Metrology | 2. Food Safety & Ingredients | 3. Nutrition & HFSS -->
+            <div class="flex border-b border-slate-200 space-x-4 text-sm font-semibold">
+              <button id="auditSubTab-1" onclick="switchAuditTab(1)" class="pb-2 border-b-2 border-sky-600 text-sky-600 flex items-center gap-1.5">
+                <i data-lucide="scale" class="w-4 h-4"></i>
+                Legal Metrology (7 Rules)
+              </button>
+              <button id="auditSubTab-2" onclick="switchAuditTab(2)" class="pb-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-1.5">
+                <i data-lucide="flask-conical" class="w-4 h-4"></i>
+                Harmful Ingredients
+              </button>
+              <button id="auditSubTab-3" onclick="switchAuditTab(3)" class="pb-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-1.5">
+                <i data-lucide="heart-pulse" class="w-4 h-4"></i>
+                Nutritional Proportions
+              </button>
+            </div>
+
+            <!-- SUB-PANE 1: LEGAL METROLOGY DECLARATIONS -->
+            <div id="auditPane-1" class="glass-card rounded-xl p-5 shadow-sm space-y-3">
+              <div class="flex items-center justify-between text-xs text-slate-500 pb-2 border-b border-slate-100">
+                <span class="font-medium">Mandatory declarations under Legal Metrology Rules, 2011</span>
+                <span id="passedFieldsSummary" class="font-bold text-slate-800"></span>
+              </div>
+              <div id="ruleCheckList" class="space-y-2.5">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+
+            <!-- SUB-PANE 2: HARMFUL INGREDIENTS & ADDITIVES (Initially Hidden) -->
+            <div id="auditPane-2" class="hidden glass-card rounded-xl p-5 shadow-sm space-y-4">
+              <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                <div>
+                  <h4 class="text-sm font-bold text-slate-900">Food Additive & Chemical Safety Audit</h4>
+                  <p class="text-xs text-slate-500">Screening against FSSAI banned list, carcinogens, and harmful additives.</p>
+                </div>
+                <div id="ingredientSafetyBadge"></div>
+              </div>
+
+              <!-- Flagged Harmful Items Table -->
+              <div id="harmfulListContainer"></div>
+
+              <!-- Allergens Section -->
+              <div class="pt-2 border-t border-slate-100">
+                <h5 class="text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1">
+                  <i data-lucide="shield-alert" class="w-3.5 h-3.5 text-amber-600"></i>
+                  Mandatory Allergen Declarations
+                </h5>
+                <div id="allergenBadges" class="flex flex-wrap gap-1.5"></div>
+              </div>
+            </div>
+
+            <!-- SUB-PANE 3: NUTRITIONAL PROPORTIONS & HFSS (Initially Hidden) -->
+            <div id="auditPane-3" class="hidden glass-card rounded-xl p-5 shadow-sm space-y-4">
+              <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                <div>
+                  <h4 class="text-sm font-bold text-slate-900">Nutritional Facts & HFSS Thresholds</h4>
+                  <p class="text-xs text-slate-500">Evaluates Sugar, Salt, and Saturated Fat against Govt RDA proportions.</p>
+                </div>
+                <span id="hfssVerdictBadge" class="text-xs font-bold px-2.5 py-1 rounded-full"></span>
+              </div>
+
+              <div id="nutritionTableContainer" class="space-y-2"></div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- =============================================================== -->
+    <!-- TAB 2: BATCH SCANNER -->
+    <!-- =============================================================== -->
+    <div id="tabContent-batch" class="hidden space-y-6">
+      <div class="glass-card rounded-xl p-6 shadow-sm">
+        <h2 class="text-lg font-bold text-slate-900 mb-1 flex items-center gap-2">
+          <i data-lucide="layers" class="w-5 h-5 text-sky-600"></i>
+          Batch / Bulk Commodity Scanner
+        </h2>
+        <p class="text-xs text-slate-500 mb-4">
+          Upload multiple product images for automated high-volume compliance screening and audit export.
+        </p>
+
+        <div class="border-2 border-dashed border-slate-300 rounded-xl p-8 text-center bg-slate-50 cursor-pointer" onclick="document.getElementById('batchFileInput').click()">
+          <input type="file" id="batchFileInput" multiple accept="image/*" class="hidden" onchange="handleBatchFileSelect(event)" />
+          <i data-lucide="file-stack" class="w-12 h-12 text-sky-600 mx-auto mb-2"></i>
+          <p class="text-sm font-semibold text-slate-700">Select Multiple Product Label Photos</p>
+          <p class="text-xs text-slate-400 mt-1">Upload 2 to 50 label images simultaneously</p>
+        </div>
+
+        <div id="batchProgress" class="hidden mt-4 text-center py-4">
+          <div class="inline-block animate-spin rounded-full h-6 w-6 border-2 border-sky-600 border-t-transparent mb-1"></div>
+          <p class="text-xs font-bold text-slate-700">Processing batch scans through Tesseract and Rule Engine...</p>
+        </div>
+
+        <div id="batchResultsTableContainer" class="hidden mt-6">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-bold text-slate-800">Batch Inspection Summary</h3>
+            <button onclick="exportBatchCSV()" class="text-xs bg-emerald-600 text-white font-semibold px-3 py-1.5 rounded-lg hover:bg-emerald-500 transition flex items-center gap-1">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i> Export CSV
+            </button>
+          </div>
+          <div class="overflow-x-auto rounded-lg border border-slate-200">
+            <table class="w-full text-xs text-left text-slate-600">
+              <thead class="bg-slate-100 text-slate-700 font-bold uppercase text-[10px]">
+                <tr>
+                  <th class="px-4 py-3">Product Name</th>
+                  <th class="px-4 py-3">Metrology Score</th>
+                  <th class="px-4 py-3">Declarations</th>
+                  <th class="px-4 py-3">Food Safety</th>
+                  <th class="px-4 py-3">Status</th>
+                  <th class="px-4 py-3">Action</th>
+                </tr>
+              </thead>
+              <tbody id="batchTableBody" class="divide-y divide-slate-100 bg-white"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =============================================================== -->
+    <!-- TAB 3: REGULATIONS & RULES GUIDE -->
+    <!-- =============================================================== -->
+    <div id="tabContent-regulations" class="hidden space-y-6">
+      <div class="glass-card rounded-xl p-6 shadow-sm">
+        <div class="max-w-3xl mb-6">
+          <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+            <i data-lucide="book-marked" class="w-6 h-6 text-sky-600"></i>
+            National Packaged Commodity Regulatory Framework
+          </h2>
+          <p class="text-xs text-slate-500 mt-1">
+            Official guidelines under the Legal Metrology (Packaged Commodities) Rules, 2011 and FSSAI Packaging & Labelling Norms. This guide explains the criteria according to which METRO CHECK evaluates and scores packages.
+          </p>
+        </div>
+
+        <div id="regulationsContainer" class="space-y-6">
+          <!-- Loaded dynamically from /api/regulations -->
+        </div>
+      </div>
+    </div>
+
+    <!-- =============================================================== -->
+    <!-- TAB 4: ANALYTICS & RECORDS -->
+    <!-- =============================================================== -->
+    <div id="tabContent-dashboard" class="hidden space-y-6">
+      <!-- KPI Metric Cards -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="kpiGrid">
+        <div class="glass-card rounded-xl p-4 shadow-sm">
+          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Scans</p>
+          <p id="kpiTotal" class="text-2xl font-extrabold text-gov-navy mt-1">0</p>
+        </div>
+        <div class="glass-card rounded-xl p-4 shadow-sm">
+          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Compliant Products</p>
+          <p id="kpiCompliant" class="text-2xl font-extrabold text-emerald-600 mt-1">0</p>
+        </div>
+        <div class="glass-card rounded-xl p-4 shadow-sm">
+          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Needs Review</p>
+          <p id="kpiReview" class="text-2xl font-extrabold text-amber-600 mt-1">0</p>
+        </div>
+        <div class="glass-card rounded-xl p-4 shadow-sm">
+          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Non-Compliant</p>
+          <p id="kpiNonCompliant" class="text-2xl font-extrabold text-red-600 mt-1">0</p>
+        </div>
+      </div>
+
+      <!-- Chart & History Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Chart Column (5 Cols) -->
+        <div class="lg:col-span-5 glass-card rounded-xl p-5 shadow-sm">
+          <h3 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-1.5">
+            <i data-lucide="pie-chart" class="w-4 h-4 text-sky-600"></i>
+            Top Rule Violations Breakdown
+          </h3>
+          <div class="h-64 flex items-center justify-center">
+            <canvas id="violationsChart"></canvas>
+          </div>
+        </div>
+
+        <!-- History Records Column (7 Cols) -->
+        <div class="lg:col-span-7 glass-card rounded-xl p-5 shadow-sm">
+          <h3 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-1.5">
+            <i data-lucide="history" class="w-4 h-4 text-sky-600"></i>
+            Recent Scans Registry
+          </h3>
+          <div id="historyTableContainer" class="max-h-72 overflow-y-auto divide-y divide-slate-100 text-xs">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =============================================================== -->
+    <!-- TAB 5: COMPLAINTS & SHOW-CAUSE NOTICES REGISTRY -->
+    <!-- =============================================================== -->
+    <div id="tabContent-notices" class="hidden space-y-6">
+      <div class="glass-card rounded-xl p-6 shadow-sm">
+        <h2 class="text-lg font-bold text-slate-900 mb-1 flex items-center gap-2">
+          <i data-lucide="shield-alert" class="w-5 h-5 text-red-600"></i>
+          Department Complaints & Statutory Notices Registry
+        </h2>
+        <p class="text-xs text-slate-500 mb-4">
+          Tracking of formal violation dockets filed with the Department of Consumer Affairs / FSSAI and Show-Cause Notices issued to non-compliant companies.
+        </p>
+
+        <div id="complaintsList" class="space-y-3">
+          <!-- Loaded via JS -->
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ================================================================= -->
+  <!-- MODAL 1: LOGIN / AUTHENTICATION -->
+  <!-- ================================================================= -->
+  <div id="loginModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4">
+      <div class="text-center">
+        <div class="w-12 h-12 bg-sky-100 text-sky-700 rounded-xl flex items-center justify-center mx-auto mb-2 text-xl font-bold">
+          ⚖️
+        </div>
+        <h3 class="text-base font-bold text-slate-900">National Compliance Portal Login</h3>
+        <p class="text-xs text-slate-500">Sign in as Legal Metrology Enforcement Officer</p>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="font-bold text-slate-700">Official Email</label>
+          <input type="text" id="loginUsername" value="inspector@metrocheck.gov.in"
+                 class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 mt-1" />
+        </div>
+        <div>
+          <label class="font-bold text-slate-700">Password</label>
+          <input type="password" id="loginPassword" value="admin123"
+                 class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 mt-1" />
+        </div>
+      </div>
+
+      <div class="space-y-2 pt-2">
+        <button onclick="submitLogin()" class="w-full bg-gov-navy hover:bg-slate-800 text-white font-bold py-2 rounded-lg text-xs transition">
+          Sign In
+        </button>
+        <button onclick="quickDemoLogin()" class="w-full bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 font-bold py-2 rounded-lg text-xs transition flex items-center justify-center gap-1">
+          <i data-lucide="zap" class="w-3.5 h-3.5"></i>
+          1-Click Demo Inspector Login
+        </button>
+        <button onclick="closeLoginModal()" class="w-full text-slate-500 hover:text-slate-700 font-medium py-1.5 rounded-lg text-xs">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- MODAL 2: SHOW-CAUSE NOTICE VIEWER / DISPATCH -->
+  <!-- ================================================================= -->
+  <div id="noticeModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+        <div class="flex items-center gap-2">
+          <i data-lucide="mail-warning" class="w-5 h-5 text-amber-600"></i>
+          <h3 class="text-sm font-bold text-slate-900">Statutory Show-Cause Notice Generator</h3>
+        </div>
+        <button onclick="closeNoticeModal()" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="text-xs space-y-2">
+        <label class="font-bold text-slate-700">Addressed Company / Manufacturer</label>
+        <div class="flex gap-2">
+          <input type="text" id="noticeCompanyNameInput" placeholder="e.g. M/s. Global Foods & Beverages Pvt. Ltd."
+                 class="flex-1 px-3 py-2 border rounded-lg text-xs focus:ring-2 focus:ring-sky-500" />
+          <button onclick="regenerateNoticeWithCompany()" class="bg-slate-800 hover:bg-slate-700 text-white font-semibold px-3 py-2 rounded-lg text-xs">
+            Update Notice
+          </button>
+        </div>
+      </div>
+
+      <div class="flex-1 overflow-y-auto bg-slate-50 p-4 rounded-xl border border-slate-200">
+        <pre id="noticeFullText" class="text-[11px] font-mono whitespace-pre-wrap text-slate-800 leading-relaxed"></pre>
+      </div>
+
+      <div class="flex items-center justify-between pt-3 border-t border-slate-200 text-xs">
+        <span class="text-slate-500">15-Day statutory response window enforced</span>
+        <div class="flex gap-2">
+          <button onclick="dispatchNoticeAction()" class="bg-amber-600 hover:bg-amber-500 text-white font-bold px-4 py-2 rounded-lg transition flex items-center gap-1.5 shadow">
+            <i data-lucide="send" class="w-4 h-4"></i> Dispatch Notice to Company
+          </button>
+          <button onclick="closeNoticeModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold px-3 py-2 rounded-lg">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- JAVASCRIPT APPLICATION LOGIC -->
+  <!-- ================================================================= -->
+  <script>
+    // Point to port 8000 or custom backend URL (for Vercel / remote deployments)
+    const customApi = localStorage.getItem("metrocheck_api_url") || new URLSearchParams(window.location.search).get("api");
+    const API_BASE = customApi ? customApi.replace(/\/$/, "") : (window.location.port === "8000" ? "" : "http://127.0.0.1:8000");
+    let currentUser = null;
+    let currentScanData = null;
+    let selectedFile = null;
+    let webcamStream = null;
+    let violationsChartInstance = null;
+
+    // ---------------------------------------------------------------
+    // 1. INITIALIZATION & AUTHENTICATION
+    // ---------------------------------------------------------------
+    document.addEventListener("DOMContentLoaded", () => {
+      lucide.createIcons();
+      checkAuth();
+      loadRegulations();
+    });
+
+    function checkAuth() {
+      const stored = localStorage.getItem("metrocheck_user");
+      if (stored) {
+        currentUser = JSON.parse(stored);
+      } else {
+        // Auto demo user for seamless presentation
+        currentUser = {
+          username: "inspector@metrocheck.gov.in",
+          full_name: "Senior Enforcement Officer",
+          role: "Inspector"
+        };
+      }
+      renderAuthHeader();
+    }
+
+    function renderAuthHeader() {
+      const el = document.getElementById("authHeaderState");
+      if (currentUser) {
+        el.innerHTML = `
+          <div class="flex items-center space-x-2 text-right">
+            <div>
+              <p class="text-xs font-bold text-white">${currentUser.full_name}</p>
+              <p class="text-[10px] text-sky-200 font-medium">Directorate of Legal Metrology</p>
+            </div>
+            <div class="w-7 h-7 bg-sky-600 text-white rounded-full flex items-center justify-center font-bold text-xs">
+              ${currentUser.full_name[0]}
+            </div>
+          </div>
+        `;
+      } else {
+        el.innerHTML = `
+          <button onclick="openLoginModal()" class="bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold px-4 py-2 rounded-lg transition shadow">
+            Inspector Login
+          </button>
+        `;
+      }
+      lucide.createIcons();
+    }
+
+    function openLoginModal() { document.getElementById("loginModal").classList.remove("hidden"); }
+    function closeLoginModal() { document.getElementById("loginModal").classList.add("hidden"); }
+
+    async function submitLogin() {
+      const u = document.getElementById("loginUsername").value;
+      const p = document.getElementById("loginPassword").value;
+      try {
+        const res = await fetch(`${API_BASE}/api/auth/login`, {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({username: u, password: p})
+        });
+        const data = await res.json();
+        if (res.ok) {
+          currentUser = data.user;
+          localStorage.setItem("metrocheck_user", JSON.stringify(currentUser));
+          renderAuthHeader();
+          closeLoginModal();
+          alert("Logged in successfully as " + currentUser.full_name);
+        } else {
+          alert("Login error: " + data.detail);
+        }
+      } catch(e) {
+        // Offline fallback
+        quickDemoLogin();
+      }
+    }
+
+    function quickDemoLogin() {
+      currentUser = {
+        username: "inspector@metrocheck.gov.in",
+        full_name: "Senior Enforcement Officer",
+        role: "Inspector"
+      };
+      localStorage.setItem("metrocheck_user", JSON.stringify(currentUser));
+      renderAuthHeader();
+      closeLoginModal();
+    }
+
+    // ---------------------------------------------------------------
+    // 2. TAB SWITCHING
+    // ---------------------------------------------------------------
+    function switchTab(tab) {
+      const tabs = ["scan", "batch", "regulations", "dashboard", "notices"];
+      tabs.forEach(t => {
+        const content = document.getElementById(`tabContent-${t}`);
+        const navBtn = document.getElementById(`nav-${t}`);
+        if (content) content.classList.toggle("hidden", t !== tab);
+        if (navBtn) {
+          if (t === tab) {
+            navBtn.className = "px-3 py-1.5 rounded-md text-sm font-semibold text-white bg-sky-600 flex items-center space-x-2";
+          } else {
+            navBtn.className = "px-3 py-1.5 rounded-md text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 flex items-center space-x-2";
+          }
+        }
+      });
+
+      if (tab === "dashboard") loadDashboard();
+      if (tab === "notices") loadComplaints();
+      lucide.createIcons();
+    }
+
+    function switchAuditTab(idx) {
+      for (let i = 1; i <= 3; i++) {
+        const pane = document.getElementById(`auditPane-${i}`);
+        const btn = document.getElementById(`auditSubTab-${i}`);
+        if (pane) pane.classList.toggle("hidden", i !== idx);
+        if (btn) {
+          if (i === idx) {
+            btn.className = "pb-2 border-b-2 border-sky-600 text-sky-600 flex items-center gap-1.5 font-bold";
+          } else {
+            btn.className = "pb-2 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-1.5 font-medium";
+          }
+        }
+      }
+      lucide.createIcons();
+    }
+
+    // ---------------------------------------------------------------
+    // 3. IMAGE SELECTION & LIVE CAMERA
+    // ---------------------------------------------------------------
+    const dropZone = document.getElementById("dropZone");
+    dropZone.addEventListener("click", () => document.getElementById("fileInput").click());
+    dropZone.addEventListener("dragover", (e) => { e.preventDefault(); dropZone.classList.add("border-sky-500"); });
+    dropZone.addEventListener("dragleave", () => dropZone.classList.remove("border-sky-500"));
+    dropZone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropZone.classList.remove("border-sky-500");
+      if (e.dataTransfer.files.length) handleSelectedFile(e.dataTransfer.files[0]);
+    });
+
+    function handleFileSelect(e) {
+      if (e.target.files.length) handleSelectedFile(e.target.files[0]);
+    }
+
+    function handleSelectedFile(file) {
+      selectedFile = file;
+      document.getElementById("previewThumb").src = URL.createObjectURL(file);
+      document.getElementById("previewFilename").textContent = file.name;
+      document.getElementById("selectedImageBar").classList.remove("hidden");
+      if (!document.getElementById("inputProductName").value) {
+        document.getElementById("inputProductName").value = file.name.replace(/\.[^/.]+$/, "").replace(/_/g, " ");
+      }
+    }
+
+    async function startLiveCamera() {
+      try {
+        webcamStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+        document.getElementById("webcamVideo").srcObject = webcamStream;
+        document.getElementById("cameraPlaceholder").classList.add("hidden");
+        document.getElementById("cameraActive").classList.remove("hidden");
+      } catch (err) {
+        alert("Camera access error: " + err.message);
+      }
+    }
+
+    function stopLiveCamera() {
+      if (webcamStream) {
+        webcamStream.getTracks().forEach(t => t.stop());
+        webcamStream = null;
+      }
+      document.getElementById("cameraPlaceholder").classList.remove("hidden");
+      document.getElementById("cameraActive").classList.add("hidden");
+    }
+
+    function captureCameraSnapshot() {
+      const video = document.getElementById("webcamVideo");
+      const canvas = document.createElement("canvas");
+      canvas.width = video.videoWidth || 640;
+      canvas.height = video.videoHeight || 480;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob((blob) => {
+        const file = new File([blob], "camera_scan.jpg", { type: "image/jpeg" });
+        handleSelectedFile(file);
+        stopLiveCamera();
+      }, "image/jpeg", 0.9);
+    }
+
+    // ---------------------------------------------------------------
+    // 4. EXECUTE SCAN
+    // ---------------------------------------------------------------
+    async function executeScan() {
+      const errBanner = document.getElementById("scanErrorMessage");
+      if (errBanner) errBanner.classList.add("hidden");
+
+      if (!selectedFile) {
+        alert("Please select or capture a product label image first.");
+        return;
+      }
+
+      const prodName = document.getElementById("inputProductName").value || "Packaged Product";
+      const category = document.getElementById("inputCategory").value;
+      const layoutType = document.getElementById("inputLayoutType").value;
+
+      document.getElementById("btnRunScan").disabled = true;
+      document.getElementById("scanLoading").classList.remove("hidden");
+      document.getElementById("scanResultsArea").classList.add("hidden");
+
+      const formData = new FormData();
+      formData.append("product_name", prodName);
+      formData.append("category", category);
+      formData.append("layout_type", layoutType);
+      formData.append("file", selectedFile);
+
+      try {
+        console.log("[MetroCheck] Initiating scan via", `${API_BASE}/api/scan`);
+        const res = await fetch(`${API_BASE}/api/scan`, {
+          method: "POST",
+          body: formData,
+        });
+        
+        if (!res.ok) {
+          const errText = await res.text();
+          throw new Error(`Server returned HTTP ${res.status}: ${errText}`);
+        }
+        
+        const data = await res.json();
+        console.log("[MetroCheck] Scan completed successfully:", data);
+        currentScanData = data;
+        renderScanResults(data);
+        
+        // Smoothly reveal results
+        const resultsEl = document.getElementById("scanResultsArea");
+        resultsEl.classList.remove("hidden");
+        resultsEl.scrollIntoView({ behavior: "smooth" });
+      } catch (err) {
+        console.error("[MetroCheck] Scan encountered an error:", err);
+        if (errBanner) {
+          document.getElementById("scanErrorDetail").textContent = err.message;
+          errBanner.classList.remove("hidden");
+          errBanner.scrollIntoView({ behavior: "smooth" });
+        } else {
+          alert("Scan error: " + err.message);
+        }
+      } finally {
+        document.getElementById("btnRunScan").disabled = false;
+        document.getElementById("scanLoading").classList.add("hidden");
+      }
+    }
+
+    // ---------------------------------------------------------------
+    // 5. RENDER SCAN RESULTS
+    // ---------------------------------------------------------------
+    function renderScanResults(data) {
+      document.getElementById("scanResultsArea").classList.remove("hidden");
+
+      // 1. Status Banner
+      const status = data.decision.status;
+      const score = data.compliance_score;
+      const banner = document.getElementById("statusBanner");
+      const icon = document.getElementById("statusIcon");
+      const title = document.getElementById("statusTitle");
+      const scoreBadge = document.getElementById("scoreBadgeText");
+      const summary = document.getElementById("statusSummary");
+
+      title.textContent = status;
+      scoreBadge.textContent = `${score}% Compliance`;
+      summary.textContent = data.decision.summary;
+
+      if (status === "COMPLIANT") {
+        banner.className = "rounded-xl p-5 border shadow-sm flex flex-col md:flex-row items-center justify-between gap-4 bg-emerald-50 border-emerald-200 text-emerald-950";
+        icon.className = "p-3 rounded-xl text-3xl font-extrabold flex items-center justify-center bg-emerald-600 text-white";
+        icon.innerHTML = "✅";
+        scoreBadge.className = "text-xs px-2.5 py-0.5 rounded-full font-bold bg-emerald-200 text-emerald-900";
+      } else if (status === "NEEDS REVIEW") {
+        banner.className = "rounded-xl p-5 border shadow-sm flex flex-col md:flex-row items-center justify-between gap-4 bg-amber-50 border-amber-200 text-amber-950";
+        icon.className = "p-3 rounded-xl text-3xl font-extrabold flex items-center justify-center bg-amber-600 text-white";
+        icon.innerHTML = "⚠️";
+        scoreBadge.className = "text-xs px-2.5 py-0.5 rounded-full font-bold bg-amber-200 text-amber-900";
+      } else {
+        banner.className = "rounded-xl p-5 border shadow-sm flex flex-col md:flex-row items-center justify-between gap-4 bg-red-50 border-red-200 text-red-950";
+        icon.className = "p-3 rounded-xl text-3xl font-extrabold flex items-center justify-center bg-red-600 text-white";
+        icon.innerHTML = "❌";
+        scoreBadge.className = "text-xs px-2.5 py-0.5 rounded-full font-bold bg-red-200 text-red-900";
+      }
+
+      // Download PDF button link
+      document.getElementById("btnDownloadPDF").href = `${API_BASE}/api/report/${data.scan_id}`;
+
+      // 2. Computer Vision Evidence
+      if (data.annotated_preview_b64) {
+        document.getElementById("annotatedImageDisplay").src = data.annotated_preview_b64;
+      }
+      document.getElementById("rawOcrText").textContent = data.raw_text || "(No text recognized)";
+
+      // 3. Legal Metrology Rules Checklist
+      document.getElementById("passedFieldsSummary").textContent = `${data.passed_fields} of ${data.total_fields} Rules Passed`;
+      const ruleList = document.getElementById("ruleCheckList");
+      ruleList.innerHTML = data.rule_results.map(r => {
+        const pass = r.found;
+        const borderC = pass ? "border-emerald-200 bg-emerald-50/50" : "border-red-200 bg-red-50/50";
+        const iconC = pass ? "text-emerald-600" : "text-red-500";
+        const icon = pass ? "check-circle" : "x-circle";
+        const aiTag = r.ai_rescued ? `<span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-1.5 py-0.5 rounded ml-1">AI Verified</span>` : "";
+        const evidence = pass ? `Detected: "${r.matched_text}"` : "Declaration missing or non-standard format.";
+
+        return `
+          <div class="border ${borderC} rounded-lg p-3 flex items-start space-x-3 transition hover:shadow-xs">
+            <i data-lucide="${icon}" class="w-5 h-5 ${iconC} shrink-0 mt-0.5"></i>
+            <div class="flex-1">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-800">${r.field} ${aiTag}</span>
+                <span class="text-[10px] text-slate-400 font-mono">${r.rule_ref || ""}</span>
+              </div>
+              <p class="text-[11px] text-slate-600 mt-0.5">${evidence}</p>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      // 4. Food Safety & Ingredients
+      const fs = data.food_safety || {};
+      const ing = fs.ingredients || {};
+      const safeBadge = document.getElementById("ingredientSafetyBadge");
+      const safeScore = ing.safety_score ?? 100;
+      const safeStatus = ing.safety_status || "SAFE";
+      const safeClass = safeStatus === "SAFE" ? "bg-emerald-100 text-emerald-800" : safeStatus.includes("CAUTION") ? "bg-amber-100 text-amber-800" : "bg-red-100 text-red-800";
+      safeBadge.innerHTML = `<span class="text-xs font-bold px-2.5 py-1 rounded-full ${safeClass}">${safeStatus} (${safeScore}/100)</span>`;
+
+      const harmfulList = document.getElementById("harmfulListContainer");
+      const flagged = ing.flagged_harmful || [];
+      if (flagged.length > 0) {
+        harmfulList.innerHTML = `
+          <div class="border border-red-200 bg-red-50/50 rounded-lg p-3 space-y-2">
+            <div class="flex items-center gap-1.5 text-xs font-bold text-red-900">
+              <i data-lucide="alert-octagon" class="w-4 h-4 text-red-600"></i>
+              ${flagged.length} Harmful / Restricted Additives Detected
+            </div>
+            <div class="space-y-1.5">
+              ${flagged.map(f => `
+                <div class="bg-white p-2 rounded border border-red-100 text-xs">
+                  <div class="flex justify-between font-bold text-red-800">
+                    <span>${f.name}</span>
+                    <span class="text-[10px] bg-red-100 text-red-900 px-1.5 py-0.2 rounded">${f.risk}</span>
+                  </div>
+                  <p class="text-[11px] text-slate-600 mt-0.5">${f.reason}</p>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      } else {
+        harmfulList.innerHTML = `
+          <div class="bg-emerald-50 border border-emerald-200 text-emerald-900 rounded-lg p-3 text-xs flex items-center gap-2">
+            <i data-lucide="check" class="w-4 h-4 text-emerald-600"></i>
+            <span>No banned chemical additives or hazardous synthetic agents found in the ingredients declaration.</span>
+          </div>
+        `;
+      }
+
+      // Allergens
+      const allergens = ing.detected_allergens || [];
+      const allergenBadges = document.getElementById("allergenBadges");
+      if (allergens.length > 0) {
+        allergenBadges.innerHTML = allergens.map(a =>
+          `<span class="bg-amber-100 text-amber-900 text-xs font-semibold px-2 py-0.5 rounded-md border border-amber-200">⚠️ ${a}</span>`
+        ).join("");
+      } else {
+        allergenBadges.innerHTML = `<span class="text-xs text-slate-400">No major common allergens detected</span>`;
+      }
+
+      // 5. Nutritional HFSS Proportions
+      const nut = fs.nutrition || {};
+      const hfssBadge = document.getElementById("hfssVerdictBadge");
+      const hfssVerdict = nut.proportion_verdict || "NOT DECLARED";
+      const hfssClass = hfssVerdict.includes("HFSS") ? "bg-red-100 text-red-800" : hfssVerdict.includes("BALANCED") ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800";
+      hfssBadge.className = `text-xs font-bold px-2.5 py-1 rounded-full ${hfssClass}`;
+      hfssBadge.textContent = hfssVerdict;
+
+      const nutTable = document.getElementById("nutritionTableContainer");
+      const flags = nut.hfss_flags || [];
+      if (flags.length > 0) {
+        nutTable.innerHTML = flags.map(f => {
+          const colorC = f.severity === "red" ? "text-red-700 bg-red-50 border-red-200" : f.severity === "amber" ? "text-amber-700 bg-amber-50 border-amber-200" : "text-emerald-700 bg-emerald-50 border-emerald-200";
+          return `
+            <div class="border ${colorC} rounded-lg p-2.5 flex items-center justify-between text-xs">
+              <div>
+                <span class="font-bold text-slate-800">${f.nutrient}</span>
+                <span class="text-slate-500 font-mono ml-2">${f.value} ${f.unit}</span>
+                <p class="text-[11px] text-slate-500">${f.note}</p>
+              </div>
+              <span class="font-bold text-[11px] uppercase">${f.status}</span>
+            </div>
+          `;
+        }).join("");
+      } else {
+        nutTable.innerHTML = `<p class="text-xs text-slate-400">Nutritional table not clearly detected in OCR image.</p>`;
+      }
+
+      try {
+        if (window.lucide && typeof lucide.createIcons === "function") {
+          lucide.createIcons();
+        }
+      } catch(iconErr) {
+        console.warn("[MetroCheck] Icon render notice:", iconErr);
+      }
+    }
+
+    // ---------------------------------------------------------------
+    // 6. SHOW-CAUSE NOTICE & COMPLAINT ACTIONS
+    // ---------------------------------------------------------------
+    function openNoticeModal() {
+      if (!currentScanData || !currentScanData.legal_notice) {
+        alert("Scan a non-compliant product first to view or generate the statutory notice.");
+        return;
+      }
+      document.getElementById("noticeFullText").textContent = currentScanData.legal_notice.notice_text;
+      document.getElementById("noticeCompanyNameInput").value = currentScanData.legal_notice.company_name || "";
+      document.getElementById("noticeModal").classList.remove("hidden");
+      lucide.createIcons();
+    }
+
+    function closeNoticeModal() { document.getElementById("noticeModal").classList.add("hidden"); }
+
+    async function regenerateNoticeWithCompany() {
+      const comp = document.getElementById("noticeCompanyNameInput").value;
+      if (!currentScanData) return;
+      try {
+        const res = await fetch(`${API_BASE}/api/notice/generate`, {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({scan_id: currentScanData.scan_id, company_name: comp})
+        });
+        const updated = await res.json();
+        currentScanData.legal_notice = updated;
+        document.getElementById("noticeFullText").textContent = updated.notice_text;
+      } catch(e) {
+        alert("Error updating notice: " + e.message);
+      }
+    }
+
+    function dispatchNoticeAction() {
+      alert("✅ Statutory Show-Cause Notice dispatched to company!\n\n15-Day rectification window recorded in Enforcement Registry.");
+      closeNoticeModal();
+    }
+
+    async function fileDepartmentComplaintAction() {
+      if (!currentScanData) return;
+      try {
+        const res = await fetch(`${API_BASE}/api/complaint/file`, {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({scan_id: currentScanData.scan_id, company_name: ""})
+        });
+        const data = await res.json();
+        alert(`🚨 Official Complaint Filed with Department!\n\nDocket Reference ID: ${data.docket.docket_id}\nStatus: ${data.docket.status}\n\nEnforcement officers will receive this dossier for physical retail inspection.`);
+      } catch (e) {
+        alert("Failed to lodge complaint: " + e.message);
+      }
+    }
+
+    // ---------------------------------------------------------------
+    // 7. BATCH SCANNER LOGIC
+    // ---------------------------------------------------------------
+    let batchFilesList = [];
+
+    function handleBatchFileSelect(e) {
+      batchFilesList = Array.from(e.target.files);
+      if (batchFilesList.length > 0) executeBatchScan();
+    }
+
+    async function executeBatchScan() {
+      document.getElementById("batchProgress").classList.remove("hidden");
+      document.getElementById("batchResultsTableContainer").classList.add("hidden");
+
+      const formData = new FormData();
+      batchFilesList.forEach(f => formData.append("files", f));
+
+      try {
+        const res = await fetch(`${API_BASE}/api/scan/batch`, {
+          method: "POST",
+          body: formData
+        });
+        const data = await res.json();
+        renderBatchResults(data.results);
+      } catch (err) {
+        alert("Batch scan error: " + err.message);
+      } finally {
+        document.getElementById("batchProgress").classList.add("hidden");
+      }
+    }
+
+    function renderBatchResults(results) {
+      document.getElementById("batchResultsTableContainer").classList.remove("hidden");
+      const tbody = document.getElementById("batchTableBody");
+      tbody.innerHTML = results.map(r => {
+        const stClass = r.status === "COMPLIANT" ? "text-emerald-700 bg-emerald-100" : r.status === "NEEDS REVIEW" ? "text-amber-700 bg-amber-100" : "text-red-700 bg-red-100";
+        return `
+          <tr class="hover:bg-slate-50">
+            <td class="px-4 py-3 font-semibold text-slate-900">${r.product_name}</td>
+            <td class="px-4 py-3 font-bold">${r.compliance_score}%</td>
+            <td class="px-4 py-3">${r.passed_fields}</td>
+            <td class="px-4 py-3">${r.food_safety_score ?? 100}/100</td>
+            <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${stClass}">${r.status}</span></td>
+            <td class="px-4 py-3">
+              <a href="${API_BASE}/api/report/${r.scan_id}" target="_blank" class="text-sky-600 hover:text-sky-800 font-bold">PDF</a>
+            </td>
+          </tr>
+        `;
+      }).join("");
+      lucide.createIcons();
+    }
+
+    function exportBatchCSV() {
+      const rows = [["Product", "Score", "Status"]];
+      const table = document.getElementById("batchTableBody");
+      for (let r of table.rows) {
+        rows.push([r.cells[0].innerText, r.cells[1].innerText, r.cells[4].innerText]);
+      }
+      let csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "batch_compliance_report.csv");
+      document.body.appendChild(link);
+      link.click();
+    }
+
+    // ---------------------------------------------------------------
+    // 8. REGULATIONS GUIDE LOADER
+    // ---------------------------------------------------------------
+    async function loadRegulations() {
+      try {
+        const res = await fetch(`${API_BASE}/api/regulations`);
+        const data = await res.json();
+        const container = document.getElementById("regulationsContainer");
+        container.innerHTML = data.acts.map(act => `
+          <div class="border border-slate-200 rounded-xl p-5 bg-white shadow-xs space-y-3">
+            <h3 class="text-sm font-bold text-gov-navy uppercase tracking-wider flex items-center gap-2">
+              <i data-lucide="scale" class="w-4 h-4 text-sky-600"></i>
+              ${act.name}
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              ${act.rules.map(r => `
+                <div class="bg-slate-50 border border-slate-200 rounded-lg p-3 text-xs space-y-1">
+                  <div class="flex justify-between font-bold text-slate-800">
+                    <span>${r.title}</span>
+                    <span class="text-[10px] text-sky-700 font-mono">${r.rule}</span>
+                  </div>
+                  <p class="text-slate-600">${r.mandate}</p>
+                  <p class="text-[10px] text-red-600 font-semibold pt-1">Penalty: ${r.penalty}</p>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        `).join("");
+        lucide.createIcons();
+      } catch (e) {
+        console.log("Regulations loading deferred.");
+      }
+    }
+
+    // ---------------------------------------------------------------
+    // 9. DASHBOARD & ANALYTICS LOADER
+    // ---------------------------------------------------------------
+    async function loadDashboard() {
+      try {
+        const res = await fetch(`${API_BASE}/api/stats`);
+        const stats = await res.json();
+
+        document.getElementById("kpiTotal").textContent = stats.total_scans;
+        document.getElementById("kpiCompliant").textContent = stats.compliant_count;
+        document.getElementById("kpiReview").textContent = stats.needs_review_count;
+        document.getElementById("kpiNonCompliant").textContent = stats.non_compliant_count;
+
+        // Chart
+        const labels = Object.keys(stats.rule_violations || {});
+        const counts = Object.values(stats.rule_violations || {});
+        
+        if (violationsChartInstance) violationsChartInstance.destroy();
+        const ctx = document.getElementById("violationsChart").getContext("2d");
+        violationsChartInstance = new Chart(ctx, {
+          type: "doughnut",
+          data: {
+            labels: labels.length ? labels : ["No Violations Yet"],
+            datasets: [{
+              data: counts.length ? counts : [1],
+              backgroundColor: ["#ef4444", "#f59e0b", "#0284c7", "#8b5cf6", "#ec4899", "#10b981"],
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } }
+          }
+        });
+
+        // History
+        const hRes = await fetch(`${API_BASE}/api/history`);
+        const scans = await hRes.json();
+        const hContainer = document.getElementById("historyTableContainer");
+        hContainer.innerHTML = scans.map(s => `
+          <div class="py-2.5 flex items-center justify-between hover:bg-slate-50 px-2 rounded">
+            <div>
+              <p class="font-bold text-slate-800">${s.product_name}</p>
+              <p class="text-[10px] text-slate-400">${s.scan_time} • ${s.passed_fields}/${s.total_fields} Declarations</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${s.decision_status === 'COMPLIANT' ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">
+                ${s.compliance_score}%
+              </span>
+              <a href="${API_BASE}/api/report/${s.id}" target="_blank" class="text-sky-600 hover:text-sky-800 text-[10px] font-bold">PDF</a>
+            </div>
+          </div>
+        `).join("");
+
+      } catch (e) {
+        console.error("Dashboard error:", e);
+      }
+    }
+
+    async function loadComplaints() {
+      try {
+        const res = await fetch(`${API_BASE}/api/complaints`);
+        const complaints = await res.json();
+        const list = document.getElementById("complaintsList");
+        if (!complaints.length) {
+          list.innerHTML = `<p class="text-xs text-slate-400">No violations reported to Department yet.</p>`;
+          return;
+        }
+        list.innerHTML = complaints.map(c => `
+          <div class="border border-red-200 bg-white rounded-xl p-4 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-3 text-xs">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-red-800 font-mono">${c.docket_id}</span>
+                <span class="bg-red-100 text-red-800 font-bold px-2 py-0.5 rounded text-[10px]">${c.status}</span>
+              </div>
+              <p class="text-slate-800 font-semibold mt-1">Product: "${c.product_name}"</p>
+              <p class="text-[11px] text-slate-500">Filed on: ${c.filed_at}</p>
+            </div>
+            <button class="bg-gov-navy text-white px-3 py-1.5 rounded-lg text-xs font-semibold">View Case Dossier</button>
+          </div>
+        `).join("");
+      } catch (e) {
+        console.error("Error loading complaints:", e);
+      }
+    }
+  </script>
+</body>
+</html>

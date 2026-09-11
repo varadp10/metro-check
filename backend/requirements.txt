@@ -1,0 +1,16 @@
+fastapi
+uvicorn[standard]
+python-multipart
+python-dotenv
+opencv-python
+pytesseract
+pillow
+reportlab
+requests
+
+# Only needed once you switch STORAGE_MODE=supabase in .env
+supabase
+
+# Only needed once you set USE_AI_CROSSCHECK=true in .env
+anthropic
+

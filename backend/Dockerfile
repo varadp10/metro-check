@@ -1,7 +1,10 @@
 FROM python:3.10-slim
 
+# Prevent interactive prompts during apt install
+ENV DEBIAN_FRONTEND=noninteractive
+
 # Install system dependencies for Tesseract OCR and OpenCV
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update -y && apt-get install -y \
     tesseract-ocr \
     tesseract-ocr-eng \
     libgl1-mesa-glx \

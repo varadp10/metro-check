@@ -2,11 +2,12 @@ fastapi
 uvicorn[standard]
 python-multipart
 python-dotenv
-opencv-python
+opencv-python-headless
 pytesseract
 pillow
 reportlab
 requests
+
 
 # Only needed once you switch STORAGE_MODE=supabase in .env
 supabase

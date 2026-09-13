@@ -28,6 +28,9 @@ backend/uploaded_images/*
 *.zip
 *.tar.gz
 *.rar
+*.jpeg
+*.jpg
+
 
 # Generated PDFs
 backend/*.pdf

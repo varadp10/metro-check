@@ -603,9 +603,10 @@
   <!-- JAVASCRIPT APPLICATION LOGIC -->
   <!-- ================================================================= -->
   <script>
-    // Point to port 8000 or custom backend URL (for Vercel / remote deployments)
+    // Point to live cloud Render backend by default, or localhost when running on port 8000
+    const defaultCloudBackend = "https://metro-check-backend.onrender.com";
     const customApi = localStorage.getItem("metrocheck_api_url") || new URLSearchParams(window.location.search).get("api");
-    const API_BASE = customApi ? customApi.replace(/\/$/, "") : (window.location.port === "8000" ? "" : "http://127.0.0.1:8000");
+    const API_BASE = customApi ? customApi.replace(/\/$/, "") : (window.location.port === "8000" ? "" : defaultCloudBackend);
     let currentUser = null;
     let currentScanData = null;
     let selectedFile = null;
